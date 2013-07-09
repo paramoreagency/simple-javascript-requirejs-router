@@ -105,7 +105,7 @@ define([], function()
         */
        function currentRouteIsHomePage(segments)
        {
-           return segments.length == 1 && routes["/"];
+           return segments.length == 1 && routes["/"] && segments[0] == "";
        }
 
        /**
