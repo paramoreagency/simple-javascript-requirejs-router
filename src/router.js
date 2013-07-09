@@ -64,13 +64,16 @@ define([], function()
            var routeSegments = route.split("/");
            var routeParams = [];
 
-           if (numberOfSegmentsDontMatch(routeSegments, locationSegments))
+           if (numberOfSegmentsDontMatch(routeSegments, locationSegments) && !routeContainsWildcard(routeSegments))
                 return false;
 
            for(var i = 0; i < locationSegments.length; i++)
            {
                var locationSegment = locationSegments[i];
                var routeSegment = routeSegments[i];
+
+               if (routeSegmentIsWildcard(routeSegment))
+                  return routeParams;
 
                if (eitherSegmentIsEmpty(locationSegment, routeSegment))
                {
@@ -125,6 +128,28 @@ define([], function()
        function routeSegmentIsVariablePlaceholder(routeSegment)
        {
            return routeSegment.indexOf(":") === 0;
+       }
+
+       /**
+        * @param  {Array} routeSegments
+        * @return {boolean}
+        */
+       function routeContainsWildcard(routeSegments)
+       {
+           for(var segment in routeSegments)
+               if (routeSegmentIsWildcard(segment))
+                  return true;
+
+           return false;
+       }
+
+       /**
+        * @param  {string} routeSegment
+        * @returns {boolean}
+        */
+       function routeSegmentIsWildcard(routeSegment)
+       {
+           return routeSegment.indexOf("*") === 0;
        }
 
        /**
