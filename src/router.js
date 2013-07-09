@@ -5,6 +5,10 @@ define([], function()
        var routes = {};
        var otherwiseCallback = null;
 
+	   this.settings = {
+		   useHash: false
+	   };
+
        /**
         * @param {string} route
         * @param {function} callback
@@ -25,9 +29,12 @@ define([], function()
        /**
         * @return {void}
         */
-       this.run = function()
+       this.run = function(segments)
        {
-           var segments = getRoutableSegments();
+	       var self = this;
+	       segments = (segments)
+	           ? segments
+	           : getRoutableSegments(self.settings);
 
            if (currentRouteIsHomePage(segments))
            {
@@ -174,9 +181,11 @@ define([], function()
        /**
         * @returns {Array}
         */
-       function getRoutableSegments()
+       function getRoutableSegments(settings)
        {
-           var segments = window.location.pathname.split("/");
+	       var segments = (settings.useHash)
+                          ? window.location.hash.split("/")
+	                      : window.location.pathname.split("/");
            segments.shift();
 
            return segments;
